@@ -9,7 +9,7 @@ Illustrates running a private set intersection (PSI) protocol between two agenci
 
 # To run:
 
-## Start the contaier
+## Start the container
 
 ```sh
 docker build -t psidemo:latest .
