@@ -97,3 +97,18 @@ docker builder prune
 # Sources
 
 The implementation of PSI is from [OpenMined](https://github.com/OpenMined/PSI). The example data comes from the [Febrl](https://users.cecs.anu.edu.au/~Peter.Christen/Febrl/febrl-0.3/febrldoc-0.3/front.html) - Freely extensible biomedical record linkage.
+
+# Codespaces
+
+If you do not have Docker desktop, you can run the demo in a Github [Codespace](https://github.com/codespaces).
+
+1. Create a new Codespace
+   1. Select `vdorie/psi_demo` as the repository
+   2. Leave other options at the default
+2. Wait while the Codespace builds
+3. Create multiple terminals and arrange them within your Codespace windows
+4. Run the above processes without first calling Docker:
+   1. One terminal for `inotifywait -m /app/server -e create`
+   2. One terminal for `cd /app/agency_a && python agency_a.py`
+   3. One terminal for `cd /app/agency_b && python agency_b.py`
+   4. Create a fourth terminal for poking around - no commands needed
