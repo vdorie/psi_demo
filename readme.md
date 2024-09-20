@@ -112,3 +112,5 @@ If you do not have Docker desktop, you can run the demo in a Github [Codespace](
    2. One terminal for `cd /app/agency_a && python agency_a.py`
    3. One terminal for `cd /app/agency_b && python agency_b.py`
    4. Create a fourth terminal for poking around - no commands needed
+5. When finished, terminate the Codespace by clicking on the lower-left of the window and selecting "Stop Codespace"
+6. If desired, delete the Codespace entirely from the [dashboard](https://github.com/codespaces)
