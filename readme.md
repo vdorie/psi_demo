@@ -11,9 +11,11 @@ Illustrates running a private set intersection (PSI) protocol between two agenci
 
 ## Start the container
 
+From the root directory of the repository, execute:
+
 ```sh
-docker build -t psidemo:latest .
-docker run -it --rm --name psidemo -d psidemo:latest
+docker build -t psidemo .
+docker run -it --rm --name psidemo -d psidemo
 ```
 
 ## Run PSI
@@ -23,7 +25,7 @@ Run each of the following in separate terminal windows.
 ### Server
 
 ```sh
-docker exec -it psidemo inotifywait -m /app/server
+docker exec -it psidemo inotifywait -m /app/server -e create
 ```
 
 ### Agency A
@@ -42,17 +44,56 @@ docker exec -it psidemo bash -c 'cd /app/agency_b && python agency_b.py'
 
 Press return to step through the scripts, starting with Agency B.
 
-## Stop the container
+# Checking result
 
-Ctrl-C out of the server watch process. The python scripts should terminate themselves. Then run:
+The scripts for Agencies A and B write out their fingerprints, which can be compared to the file that gets written to the server `agency_a_and_b_common_elements.txt` as part of the PSI protocol. To check that the intersection is calculated correctly, first run:
+
+```sh
+docker exec -it psidemo bash -l
+python
+```
+
+To open a shell in the container and start an interactive python session. Then run:
+
+```python
+def read_file_to_set(file: str) -> set:
+    result = set()
+    with open(file, 'r') as f:
+       for fingerprint in f:
+            result.add(fingerprint.rstrip())
+    return result
+
+agency_a_data = read_file_to_set('/app/agency_a/agency_a_fingerprints.txt')
+agency_b_data = read_file_to_set('/app/agency_b/agency_b_fingerprints.txt')
+psi_result = read_file_to_set('/app/server/agency_a_and_b_common_elements.txt')
+
+assert psi_result == agency_a_data.intersection(agency_b_data)
+```
+
+# Stopping the container
+
+Ctrl-C out of the server notify process. The python scripts should terminate themselves. Then run:
 
 ```sh
 docker stop psidemo
 ```
 
+# Reclaim space
+
+When completely done with demo, execute to reclaim disk space:
+
+```sh
+docker image rm psidemo
+docker builder prune
+```
+
 # Todo
 
-1. Incorporate use of test data
-2. Create fingerprints from test data
-   * Also determine record linkage from common fingerprints
-3. Encrypt final message sending intersection back to Agency A
+1. Create more than fingerprint from test data
+2. Use multiple fingerprints to determine probabilistic record linkage
+3. Decrypt intermediate messages for illustration
+4. Encrypt final message sending intersection back to Agency A
+
+# Sources
+
+The implementation of PSI is from [OpenMined](https://github.com/OpenMined/PSI). The example data comes from the [Febrl](https://users.cecs.anu.edu.au/~Peter.Christen/Febrl/febrl-0.3/febrldoc-0.3/front.html) - Freely extensible biomedical record linkage.

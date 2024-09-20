@@ -92,18 +92,27 @@ RUN \
   pip install --no-cache-dir $(ls -1 ./bazel-bin/private_set_intersection/python/*.whl)
 
 
+WORKDIR /app
+
+
 # Install package dependencies for PSI demo scripts
 
 RUN \
   pip install --no-cache-dir \
-    cryptography
-
+    cryptography \
+    pandas
 
 # Make directories and copy in the demo scripts
 RUN mkdir -p /app/agency_a /app/agency_b /app/server
 
 COPY agency_a.py /app/agency_a
+COPY agency_a_data.csv.gz /app/agency_a
 COPY agency_b.py /app/agency_b
+COPY agency_b_data.csv.gz /app/agency_b
+
+RUN \
+  gunzip agency_a/agency_a_data.csv.gz && \
+  gunzip agency_b/agency_b_data.csv.gz
 
 ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
 
