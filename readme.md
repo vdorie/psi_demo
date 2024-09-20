@@ -107,10 +107,13 @@ If you do not have Docker desktop, you can run the demo in a Github [Codespace](
    2. Leave other options at the default
 2. Wait while the Codespace builds
 3. Create multiple terminals and arrange them within your Codespace windows
+   1. Navigate to the `TERMINAL` tab in the console area on the bottom of the screen
+   2. Push the `+` over the side bar on the right to create a new `bash` session; repeat as necessary
+   3. Right click on each process and move the terminal to its own area
 4. Run the above processes without first calling Docker:
    1. One terminal for `inotifywait -m /app/server -e create`
    2. One terminal for `cd /app/agency_a && python agency_a.py`
    3. One terminal for `cd /app/agency_b && python agency_b.py`
-   4. Create a fourth terminal for poking around - no commands needed
-5. When finished, terminate the Codespace by clicking on the lower-left of the window and selecting "Stop Codespace"
+   4. If desired, create a fourth terminal for examining the filesystem - no commands needed
+5. When finished, terminate the Codespace by clicking on the lower-left of the window and selecting "Stop Current Codespace"
 6. If desired, delete the Codespace entirely from the [dashboard](https://github.com/codespaces)
