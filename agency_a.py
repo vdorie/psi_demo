@@ -134,7 +134,7 @@ print('message contents :\n' + '\n'.join(str(response).split('\n')[0:5]) + '\n  
 #       by agencies A and B and then computing the intersection
 
 # waiting to finish
-print('[A<-B] STEP 5: waiting to receive agency agency B common elements')
+print('[A<-B] STEP 5: waiting to receive agency A and agency B common elements')
 input("Agency A: press [ENTER] once message has been sent")
 
 intersection = []
