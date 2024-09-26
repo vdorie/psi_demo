@@ -14,6 +14,10 @@ import private_set_intersection.python as psi
 
 is_interactive = hasattr(sys, 'ps1')
 
+# set to False to only reveal the size of the common elements and not
+# their specific values
+reveal_intersection = False
+
 print("enter path to file for linkage [agency_a_data.csv]:")
 while True:
     input_file_path = input("> ") if not is_interactive else ""
@@ -47,7 +51,7 @@ with open('agency_a_fingerprints.txt', 'w') as f:
 num_server_items = len(fingerprints)
 
 print("enter path to private key or leave blank to generate a new one")
-private_key_path = input("> ") if not is_interactive else "" 
+private_key_path = input("> ") if not is_interactive else ""
 
 if private_key_path == "":
     # SECP256R1 is https://neuromancer.sk/std/x962/prime256v1
@@ -68,7 +72,10 @@ else:
 
 private_bytes = private_key.private_numbers().private_value.to_bytes(32, 'little')
 
-server = psi.server.CreateFromKey(private_bytes, True)
+server = psi.server.CreateFromKey(
+    key_bytes = private_bytes,
+    reveal_intersection = reveal_intersection
+)
 
 assert server.GetPrivateKeyBytes() == private_bytes
 
@@ -113,7 +120,7 @@ input("Agency A: press [ENTER] once message has been sent")
 request = psi.Request()
 
 with open(server_path / 'agency_b_encrypted_by_b.o', 'rb') as f:
-   request.ParseFromString(f.read())
+   ignored = request.ParseFromString(f.read())
 
 
 
@@ -134,17 +141,27 @@ print('message contents :\n' + '\n'.join(str(response).split('\n')[0:5]) + '\n  
 #       by agencies A and B and then computing the intersection
 
 # waiting to finish
-print('[A<-B] STEP 5: waiting to receive agency A and agency B common elements')
-input("Agency A: press [ENTER] once message has been sent")
 
-intersection = []
-with open(server_path / 'agency_a_and_b_common_elements.txt', 'r') as f:
-    for item in f:
-       intersection.append(item.rstrip())
+if reveal_intersection:
+    print('[A<-B] STEP 5: waiting to receive agency A and agency B common elements')
+    input("Agency A: press [ENTER] once message has been sent")
+#
+    intersection = []
+    with open(server_path / 'agency_a_and_b_common_elements.txt', 'r') as f:
+        for item in f:
+           intersection.append(item.rstrip())
+#
+    print('[A] STEP 5.5: testing that all common elements are actually known')
+#
+    for fingerprint in intersection:
+        assert fingerprint in fingerprints
+#
+    print('[A]           all elements in data set! PSI success!')
+else:
+    print('[A<-B] STEP 5: waiting to receive size of agency A and agency B common elements')
+    input("Agency A: press [ENTER] once message has been sent")
+#
+    with open(server_path / 'agency_a_and_b_common_elements_size.txt', 'r') as f:
+        intersection_size = int(f.read())
 
-print('[A] STEP 5.5: testing that all common elements are actually known')
-
-for fingerprint in intersection:
-    assert fingerprint in fingerprints
-
-print('[A]           all elements in data set! PSI success!')
+    print(f'[A]            {intersection_size} elements in common! PSI success!')

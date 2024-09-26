@@ -14,6 +14,10 @@ import private_set_intersection.python as psi
 
 is_interactive = hasattr(sys, 'ps1')
 
+# set to False to only reveal the size of the common elements and not
+# their specific values
+reveal_intersection = False
+
 print("enter path to file for linkage [agency_b_data.csv]:")
 while True:
     input_file_path = input("> ") if not is_interactive else ""
@@ -68,7 +72,10 @@ else:
 
 private_bytes = private_key.private_numbers().private_value.to_bytes(32, 'little')
 
-client = psi.client.CreateFromKey(private_bytes, True)
+client = psi.client.CreateFromKey(
+    key_bytes = private_bytes,
+    reveal_intersection = reveal_intersection
+)
 
 assert client.GetPrivateKeyBytes() == private_bytes
 
@@ -99,7 +106,7 @@ input("Agency B: press [ENTER] once message has been sent")
 
 setup = psi.ServerSetup()
 with open(server_path / 'agency_a_encrypted_by_a.o', 'rb') as f:
-    setup.ParseFromString(f.read())
+    ignored = setup.ParseFromString(f.read())
 
 
 
@@ -121,7 +128,7 @@ input("Agency B: press [ENTER] once message has been sent")
 
 response = psi.Response()
 with open(server_path / 'agency_b_encrypted_by_a_and_b.o', 'rb') as f:
-    response.ParseFromString(f.read())
+    ignored = response.ParseFromString(f.read())
 
 
 
@@ -132,11 +139,16 @@ print('[B]           agency B data encrytped by agency A to find common')
 print('[B]           elements')
 input("Agency B: press [ENTER] to continue")
 
-intersection_indices = client.GetIntersection(setup, response)
-intersection = [ fingerprints[i] for i in intersection_indices ]
-intersection.sort()
-
-print('[B]         : intersection contains "' + '", "'.join(intersection[0:5]) + '"...')
+if reveal_intersection:
+    intersection_indices = client.GetIntersection(setup, response)
+    intersection = [ fingerprints[i] for i in intersection_indices ]
+    intersection.sort()
+#
+    print('[B]         : intersection contains "' + '", "'.join(intersection[0:5]) + '"...')
+else:
+    intersection_size = client.GetIntersectionSize(setup, response)
+#
+    print(f'[B]         : intersection contains {intersection_size} elements')
 
 
 
@@ -147,6 +159,10 @@ input("Agency B: press [ENTER] to send message")
 # TODO: encrypt agency A's initial message and send it back instead of sending
 #       results in plaintext
 
-with open(server_path / 'agency_a_and_b_common_elements.txt', 'w') as f:
-    for item in intersection:
-        ignored = f.write(str(item) + '\n')
+if reveal_intersection:
+    with open(server_path / 'agency_a_and_b_common_elements.txt', 'w') as f:
+        for item in intersection:
+            ignored = f.write(str(item) + '\n')
+else:
+    with open(server_path / 'agency_a_and_b_common_elements_size.txt', 'w') as f:
+        ignored = f.write(str(intersection_size))
