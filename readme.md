@@ -3,6 +3,8 @@ Demo of private set intersection
 
 Illustrates running a private set intersection (PSI) protocol between two agencies using a third party as an intermediary.
 
+By default it runs a private set intersection cardinality algorithm, only revealing the size of the intersection. To reveal the actual elements, set `reveal_intersection` to `True` in both `agency_a.py` and `agency_b.py` on line 19.
+
 # Dependencies:
 
 [Docker Desktop](https://www.docker.com/products/docker-desktop/)
