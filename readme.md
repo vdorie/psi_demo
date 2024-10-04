@@ -48,7 +48,9 @@ Press return to step through the scripts, starting with Agency B.
 
 # Checking result
 
-The scripts for Agencies A and B write out their fingerprints, which can be compared to the file that gets written to the server `agency_a_and_b_common_elements.txt` as part of the PSI protocol. To check that the intersection is calculated correctly, first run:
+## Private Set Intersection Cardinality
+
+The scripts for Agencies A and B write out their fingerprints, which can be compared to the file that gets written to the server `agency_a_and_b_common_elements_size.txt` as part of the PSI protocol. To check that the intersection set size is calculated correctly, first run:
 
 ```sh
 docker exec -it psidemo bash -l
@@ -67,10 +69,41 @@ def read_file_to_set(file: str) -> set:
 
 agency_a_data = read_file_to_set('/app/agency_a/agency_a_fingerprints.txt')
 agency_b_data = read_file_to_set('/app/agency_b/agency_b_fingerprints.txt')
+
+with open('/app/server/agency_a_and_b_common_elements_size.txt', 'r') as f:
+    psi_result = int(f.read())
+
+assert psi_result == len(agency_a_data.intersection(agency_b_data))
+```
+
+## Private Set Intersection
+
+Instead of the above, the protocol writes out `agency_a_and_b_common_elements.txt` which contains the elements in the intersection. To check the validity of that file, run:
+
+```sh
+docker exec -it psidemo bash -l
+python
+```
+
+Then in that interactive session, run:
+
+```python
+def read_file_to_set(file: str) -> set:
+    result = set()
+    with open(file, 'r') as f:
+       for fingerprint in f:
+            result.add(fingerprint.rstrip())
+    return result
+
+agency_a_data = read_file_to_set('/app/agency_a/agency_a_fingerprints.txt')
+agency_b_data = read_file_to_set('/app/agency_b/agency_b_fingerprints.txt')
 psi_result = read_file_to_set('/app/server/agency_a_and_b_common_elements.txt')
 
 assert psi_result == agency_a_data.intersection(agency_b_data)
 ```
+
+
+## Private Set Intersection
 
 # Stopping the container
 
