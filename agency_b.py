@@ -135,7 +135,7 @@ with open(server_path / 'agency_b_encrypted_by_a_and_b.o', 'rb') as f:
 ####### STEP 4.5: compute common elements by decrypting response and comparing to initial set 
 print('[B] Step 4.5: decrypting agency B data encrypted by agencies A and B')
 print('[B]           comparing agency A data encrypted by agency A to agency')
-print('[B]           agency B data encrytped by agency A to find common')
+print('[B]           agency B data encrypted by agency A to find common')
 print('[B]           elements')
 input("Agency B: press [ENTER] to continue")
 
