@@ -100,7 +100,8 @@ WORKDIR /app
 RUN \
   pip install --no-cache-dir \
     cryptography \
-    pandas
+    pandas \
+    psutil
 
 # Make directories and copy in the demo scripts
 RUN mkdir -p /app/agency_a /app/agency_b /app/server

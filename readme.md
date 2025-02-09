@@ -16,8 +16,8 @@ By default it runs a private set intersection cardinality algorithm, only reveal
 From the root directory of the repository, execute:
 
 ```sh
-docker build -t psidemo .
-docker run -it --rm --name psidemo -d psidemo
+docker build -t psi_demo .
+docker run -it --rm --name psi_demo -d psi_demo
 ```
 
 ## Run PSI
@@ -27,19 +27,19 @@ Run each of the following in separate terminal windows.
 ### Server
 
 ```sh
-docker exec -it psidemo inotifywait -m /app/server -e create
+docker exec -it psi_demo inotifywait -m /app/server -e create
 ```
 
 ### Agency A
 
 ```sh
-docker exec -it psidemo bash -c 'cd /app/agency_a && python agency_a.py'
+docker exec -it psi_demo bash -c 'cd /app/agency_a && python agency_a.py'
 ```
 
 ### Agency B
 
 ```sh
-docker exec -it psidemo bash -c 'cd /app/agency_b && python agency_b.py'
+docker exec -it psi_demo bash -c 'cd /app/agency_b && python agency_b.py'
 ```
 
 ## Step through the scripts
@@ -53,11 +53,10 @@ Press return to step through the scripts, starting with Agency B.
 The scripts for Agencies A and B write out their fingerprints, which can be compared to the file that gets written to the server `agency_a_and_b_common_elements_size.txt` as part of the PSI protocol. To check that the intersection set size is calculated correctly, first run:
 
 ```sh
-docker exec -it psidemo bash -l
-python
+docker exec -it psi_demo python
 ```
 
-To open a shell in the container and start an interactive python session. Then run:
+Then run:
 
 ```python
 def read_file_to_set(file: str) -> set:
@@ -81,11 +80,11 @@ assert psi_result == len(agency_a_data.intersection(agency_b_data))
 Instead of the above, the protocol writes out `agency_a_and_b_common_elements.txt` which contains the elements in the intersection. To check the validity of that file, run:
 
 ```sh
-docker exec -it psidemo bash -l
+docker exec -it psi_demo python
 python
 ```
 
-Then in that interactive session, run:
+Then:
 
 ```python
 def read_file_to_set(file: str) -> set:
@@ -110,7 +109,7 @@ assert psi_result == agency_a_data.intersection(agency_b_data)
 Ctrl-C out of the server notify process. The python scripts should terminate themselves. Then run:
 
 ```sh
-docker stop psidemo
+docker stop psi_demo
 ```
 
 # Reclaim space
@@ -118,7 +117,7 @@ docker stop psidemo
 When completely done with demo, execute to reclaim disk space:
 
 ```sh
-docker image rm psidemo
+docker image rm psi_demo
 docker builder prune
 ```
 

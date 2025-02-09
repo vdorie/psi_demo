@@ -68,7 +68,7 @@ if private_key_path == "":
 else:
     with open(private_key_path, 'rb') as pem_in:
         pemlines = pem_in.read()
-        private_key = load_pem_private_key(pemlines, None)
+        private_key = key_serialization.load_pem_private_key(pemlines, None)
 
 private_bytes = private_key.private_numbers().private_value.to_bytes(32, 'little')
 
