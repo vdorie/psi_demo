@@ -1,5 +1,14 @@
 # syntax=docker/dockerfile:1
+
 FROM debian:sid-slim AS base
+
+LABEL org.opencontainers.image.title="PSI Demo" \
+      org.opencontainers.image.description="Builds Openmined-PSI in a Python environment and prepares a demo of PSI." \
+      org.opencontainers.image.version="1.0.0" \
+      org.opencontainers.image.authors="Vincent Dorie <vdorie@gmail.com>" \
+      org.opencontainers.image.vendor="Data Bridge" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.url="https://github.com/vdorie/psi-demo"
 
 RUN apt-get update \
  && apt-get upgrade -y \
@@ -91,7 +100,7 @@ COPY PSI/private_set_intersection/cpp/datastructure/golomb.cpp private_set_inter
 COPY PSI/private_set_intersection/deps.bzl private_set_intersection
 
 # As of 03/14/2025, Bazel can no longer find python for some reason so we are symlinking
-#it into system directories 
+# it into system directories 
 
 # actually build PSI
 RUN ln -s $PYENV_ROOT/shims/python$PYTHON_VERSION_MAJOR /usr/bin/python3 && \

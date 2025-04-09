@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# This file has been modified from its original,
+# https://github.com/OpenMined/PSI/blob/b6948f2124ef91e7808dfcfad6acdc050c0536e3/private_set_intersection/deps.bzl
+# to use a more-recent com_google_absl, in order to enable the project
+# to be built.
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")

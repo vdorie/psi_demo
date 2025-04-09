@@ -16,7 +16,10 @@ By default it runs a private set intersection cardinality algorithm, only reveal
 From the root directory of the repository, execute:
 
 ```sh
-docker build -t psi_demo .
+docker build \
+  --label org.opencontainers.image.revision=$(git rev-parse HEAD) \
+  --label org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
+  -t psi_demo:latest .
 docker run -it --rm --name psi_demo -d psi_demo
 ```
 

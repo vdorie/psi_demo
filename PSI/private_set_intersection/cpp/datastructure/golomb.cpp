@@ -13,6 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+// This file has been modified from its original,
+// https://github.com/OpenMined/PSI/blob/b6948f2124ef91e7808dfcfad6acdc050c0536e3/private_set_intersection/cpp/datastructure/golomb.cpp
+// to address compiler errors, enabling the package to be built.
 
 #include "private_set_intersection/cpp/datastructure/golomb.h"
 
